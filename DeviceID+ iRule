@@ -1,0 +1,16 @@
+when ACCESS_SESSION_STARTED {
+    if [HTTP::cookie exists _imp_apg_r_] {
+        set deviceid [URI::decode [HTTP::cookie _imp_apg_r_]]
+        log local0. "URL Decoded cookie is $deviceid"
+        set deviceida [lindex [regexp -inline -- (?:"diA":")(.*?)(?:") $deviceid] 1]
+        log local0. "diA = $deviceida"
+        set deviceidb [lindex [regexp -inline -- (?:"diB":")(.*?)(?:") $deviceid] 1]
+        log local0. "diB = $deviceidb"
+        log local0. "IP is [IP::client_addr]"
+        log local0. "Path os [HTTP::path]"
+        ACCESS::session data set session.custom.deviceid.A $deviceida
+        ACCESS::session data set session.custom.deviceid.B $deviceidb
+    } else {
+    log local0. "No cookie"
+    }
+}
